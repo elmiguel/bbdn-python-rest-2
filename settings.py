@@ -63,7 +63,11 @@ config = {
         },
         "datasources": {
             "path": "/learn/api/public/v1/dataSources",
-            "fields": "externalId,name",
+            "params": {
+                "offset": 0,
+                "limit": PAGINATION,
+                "fields": "externalId,name"
+            },
             "replace": ''
         },
         "set_token": {

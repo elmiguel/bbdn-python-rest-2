@@ -31,7 +31,7 @@ from bbdn.core.Auth import AuthToken
 from bbdn.core.LearnObject import LearnObject
 import json
 
-LEARN_OBJECTS = ['user', 'course', 'term', 'membership', 'datasource', 'content', 'system']
+LEARN_OBJECTS = ['user', 'course', 'term', 'membership', 'datasource', 'content', 'system', 'grade']
 
 usage = """Bb REST API Demo
 

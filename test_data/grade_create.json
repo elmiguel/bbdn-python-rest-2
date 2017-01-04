@@ -1,0 +1,25 @@
+{
+  "externalId": "string",
+  "name": "string",
+  "description": "string",
+  "externalGrade": true,
+  "created": "2016-12-14T05:12:15.654Z",
+  "score": {
+    "possible": 0,
+    "decimalPlaces": 0
+  },
+  "availability": {
+    "available": "Yes"
+  },
+  "grading": {
+    "type": "Attempts",
+    "due": "2016-12-14T05:12:15.654Z",
+    "attemptsAllowed": 0,
+    "scoringModel": "Last",
+    "anonymousGrading": {
+      "type": "None",
+      "releaseAfter": "2016-12-14T05:12:15.654Z"
+    }
+  },
+  "contentId": "string"
+}

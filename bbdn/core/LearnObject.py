@@ -201,4 +201,3 @@ class LearnObject:
             print(json.dumps(self.res, indent=settings['json_options']['indent'],
                              separators=settings['json_options']['separators'],
                              default=self.date_handler))
-

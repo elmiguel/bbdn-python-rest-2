@@ -1,10 +1,10 @@
 PAGINATION = 5
 config = {
-    "key": "<YOUR_APPLICATION_KEY>",
-    "secret": "<YOUR_APPLICATION_SECRET>",
+    "key": "a40b86a1-4a09-4641-ba27-a40c0f697205",
+    "secret": "UfvlYEHg1EUnSfNgxOMaUYQVIPJeAaGQ",
     "credentials": "client_credentials",
     "cert_path": "./trusted/keytool_crt.pem",
-    "target_url": "<localhost:9877|your.blackboard-instance.com>",
+    "target_url": "irscstaging.blackboard.com",
     "api": {
         "base": {
             "path": "/learn/api/public/v1/"
@@ -53,13 +53,22 @@ config = {
             }
         },
         "memberships": {
-            "path": "GET /learn/api/public/v1/courses/{courseId}/users",
+            "path": "/learn/api/public/v1/courses/{courseId}/users",
             "params": {
                 "offset": 0,
                 "limit": PAGINATION,
                 "fields": "externalId,availability"
             },
-            "replace": 'courseId}'
+            "replace": '{courseId}'
+        },
+        "grades": {
+            "path": "/learn/api/public/v1/courses/{courseId}/gradebook/columns",
+            "params": {
+                "offset": 0,
+                "limit": PAGINATION,
+                "fields": ""
+            },
+            "replace": '{courseId}'
         },
         "datasources": {
             "path": "/learn/api/public/v1/dataSources",

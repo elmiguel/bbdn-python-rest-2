@@ -1,3 +1,5 @@
 .idea
 .DS_Store
 rest-key-secret
+./**/__pycache__
+./**/*.pyc

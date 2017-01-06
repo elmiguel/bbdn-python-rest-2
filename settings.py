@@ -1,10 +1,10 @@
-PAGINATION = 5
+PAGINATION = 10
 config = {
-    "key": "a40b86a1-4a09-4641-ba27-a40c0f697205",
-    "secret": "UfvlYEHg1EUnSfNgxOMaUYQVIPJeAaGQ",
+    "key": "637c6abc-7d32-4459-8bc5-0dc12a3e9899",
+    "secret": "tqrQkoKYcyDo3S6bKSwqo9TdaA7m5NJo",
     "credentials": "client_credentials",
     "cert_path": "./trusted/keytool_crt.pem",
-    "target_url": "irscstaging.blackboard.com",
+    "target_url": "irsc.blackboard.com",
     "api": {
         "base": {
             "path": "/learn/api/public/v1/"
@@ -15,7 +15,8 @@ config = {
                 "offset": 0,
                 "limit": PAGINATION,
                 "fields": "externalId,courseId,name,availability,id"
-            }
+            },
+            "replace": "{courseId}"
         },
         "contents": {
             "path": "/learn/api/public/v1/courses/{courseId}/contents",
@@ -33,7 +34,7 @@ config = {
                 "limit": PAGINATION,
                 "fields": "id,uuid,externalId,userName,name"
             },
-            "replace": ''
+            "replace": '{userId}'
         },
         "terms": {
             "path": "/learn/api/public/v1/terms",
@@ -42,7 +43,7 @@ config = {
                 "limit": PAGINATION,
                 "fields": "externalId,name"
             },
-            "replace": ''
+            "replace": '{termId}'
         },
         "systems": {
             "path": "/learn/api/public/v1/system/version",
@@ -50,7 +51,8 @@ config = {
                 "offset": 0,
                 "limit": PAGINATION,
                 "fields": ""
-            }
+            },
+            "replace": '{systemId}'
         },
         "memberships": {
             "path": "/learn/api/public/v1/courses/{courseId}/users",

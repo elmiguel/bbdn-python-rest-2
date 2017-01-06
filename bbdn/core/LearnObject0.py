@@ -32,14 +32,14 @@ from settings import config as settings
 from schema import SchemaError
 
 validators = {
-    'user': UserSchema,
-    'course': CourseSchema,
-    'content': ContentsSchema,
-    'datasource': DataSourceSchema,
-    'term': TermSchema,
-    'membership': MembershipSchema,
+    'users': UserSchema,
+    'courses': CourseSchema,
+    'contents': ContentsSchema,
+    'datasources': DataSourceSchema,
+    'terms': TermSchema,
+    'memberships': MembershipSchema,
     'system': SystemSchema,
-    'grade': GradebookColumnSchema
+    'grades': GradebookColumnSchema
 }
 
 
@@ -49,14 +49,14 @@ class LearnObject:
         self.auth = "Bearer %s" % settings['payload']['token']
         self.target_url = settings['target_url']
         self.api_type = class_name.lower()
-        self.api_path = settings['api']["%ss" % self.api_type]['path']
-        self.replacement = settings['api']["%ss" % self.api_type]['replace']
+        self.api_path = settings['api']["%s" % self.api_type]['path']
+        self.replacement = settings['api']["%s" % self.api_type]['replace']
         # self.fields = settings['api']["%ss" % self.api_type]['fields']
         self.class_name = class_name
         self.verbose = verbose
         self.debug = debug
         self.validator = validators[self.api_type]
-        self.params = settings['api']["%ss" % self.api_type]['params']
+        self.params = settings['api']["%s" % self.api_type]['params']
         self.res = None
         self.isPaginated = False
 

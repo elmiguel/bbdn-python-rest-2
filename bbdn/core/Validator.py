@@ -144,3 +144,38 @@ MembershipSchema = Schema({
     Optional("courseRoleId"): And(str, lambda s: s in ["Instructor", "TeachingAssistant", "CourseBuilder", "Grader", "Student",
                                                        "Guest"])
 })
+
+SystemSchema = Schema({
+    Optional("learn"): {
+        Optional("major"): int,
+        Optional("minor"): int,
+        Optional("patch"): int,
+        Optional("build"): str
+    }
+})
+
+GradebookColumnSchema = Schema({
+    Optional("externalId"): str,
+    "name": str,
+    Optional("description"): str,
+    Optional("externalGrade"): bool,
+    Optional("created"): And(str, Regex(date_pattern)),
+    Optional("score"): {
+        "possible": int,
+        "decimalPlaces": int
+    },
+    Optional("availability"): {
+        Optional("available"): str
+    },
+    Optional("grading"): {
+        "type": And(str, lambda s: s in ['Attempts', 'Calculated', 'Manual']),
+        Optional("due"): And(str, Regex(date_pattern)),
+        Optional("attemptsAllowed"): int,
+        Optional("scoringModel"): str,
+        Optional("anonymousGrading"): {
+            "type": And(str, lambda s: s in ['None', 'AfterAllGraded', 'Date']),
+            Optional("releaseAfter"): And(str, Regex(date_pattern))
+        }
+    },
+    "contentId": str
+})

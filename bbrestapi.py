@@ -36,7 +36,7 @@ LEARN_OBJECTS = ['user', 'course', 'term', 'membership', 'datasource', 'content'
 usage = """Bb REST API Demo
 
 Usage:
-    bbrestapi get -o <learn_object> [-i <id>...] [-t <type>...] [-v] [-D] [-P <params>] [--get-page <page>]
+    bbrestapi get -o <learn_object> [-i <id>...] [-t <type>...] [-v] [-D] [-P <params>] [--get-page <page>] [-a <path>]
     bbrestapi create -o <learn_object> -d <data> [-v] [-D]
     bbrestapi update -o <learn_object> -i <id>... -d <data> [-t <type>...] [-v] [-D]
     bbrestapi delete -o <learn_object> -i <id>... [-t <type>...] [-v] [-D]
@@ -56,7 +56,7 @@ Inputs:
                        datasource: Will create a Learning Object as a DataSource.
                        content: Will create a Learning Object as a Content item.
                        system: Will create a Learning Object as a System.
-                       grade:  Will create a Learning Object as a Gradebook item. *(NOT IMPLEMENTED...yet)*
+                       grade:  Will create a Learning Object as a Gradebook item. *(IMPLEMENTED...yet, but not Available)*
 
 
     id             If no id (<id>) specified, then will default to system get_all (200 pagination limit).
@@ -110,6 +110,7 @@ Options:
     --get-page <page>                                Accepts the pagination value returned from a previous request.
                                                      If set, then all ids, types, params are ignored. As they are
                                                      already included in the paginated value.
+    -a <path>, --append <path>                       Append a suffix to the url: /users
 """
 
 
@@ -135,7 +136,7 @@ def api(opts):
         if v:
             print(command)
         res = learn_object.get(obj_id=opts['--id'], id_type=opts['--type'], params=opts['--params'],
-                               page=opts['--get-page'])
+                               page=opts['--get-page'], append=opts['--append'])
     elif command == 'create':
         if v:
             print(command)

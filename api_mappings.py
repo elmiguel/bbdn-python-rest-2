@@ -57,51 +57,44 @@ Options:
     -m <method>, --method <method>  If set, controls the HTTP method of interaction to the API and Target.
                                     Methods: get, post, put, patch, delete. [default: get].
     -d <data>, --data <data>        Data used in post, put, patch methods. [default: None]
-    -f <file>..., --file <file>...  Data used in post, put, patch methods, but using a file or a list of files. [default: None]
-"""
+    -p <params>, --params <params>  Accepts a JSON String of key: value pairs that will be added to the RET API request.
+                                       offset: The number of rows to skip before beginning to return rows. An offset of 0 is the same as
+                                               omitting the offset parameter.
 
-base_path = '/learn/api/public/v1/'
-token = base_path + 'oauth2/token'
+                                       limit: The maximum number of results to be returned. There may be less if the query returned less
+                                              than the maximum.
+
+                                       fields: A comma-delimited list of fields to include in the response. If not specified, all fields
+                                               will be returned.
+
+                                    **Note: The params are built into the settings for defaults, if provided, then
+                                            the defaults will be overwritten.
+                                    [default: None]
+    -f <file>..., --file <file>...  Data used in post, put, patch methods, but using a file or a list of files. Overrides --data. [default: None]
+    -D, --debug                     Turn on debug mode. [default: False]
+    -P <page>, --get-page <page>    Accepts the pagination value returned from a previous request.
+                                    If set, then all ids, types, params are ignored. As they are
+                                    already included in the paginated value.
+
+"""
 
 
 def api():
-    v = opts['--verbose']
-    method = opts['--method'] if opts['--method'] in ['get',
-                                                      'post', 'put', 'patch', 'delete'] else None
-    if not method:
-        print('Unsupported method', opts['--method'] + '.',
-              'Please see help for supported methods.')
-        sys.exit(1)
-
-    auth = AuthToken(v)
-    auth.set_token()
-
-    res = None
-    learn_object = LearnObject(opts['--learn-object'].title(), v, debug)
-
-    if v:
+    if opts['--verbose']:
         print(opts)
 
-    if command == 'get':
-        if v:
-            print(command)
-        res = learn_object.get(obj_id=opts['--id'], id_type=opts['--type'], params=opts['--params'],
-                               page=opts['--get-page'], append=opts['--append'])
-    elif command == 'create':
-        if v:
-            print(command)
-        res = learn_object.create(data=opts['--data'])
-    elif command == 'update':
-        if v:
-            print(command)
-        res = learn_object.update(obj_id=opts['--id'], id_type=opts['--type'], data=opts['--data'],
-                                  params=opts['--params'])
-    elif command == 'delete':
-        if v:
-            print(command)
-        res = learn_object.delete(obj_id=opts['--id'], id_type=opts['--type'])
+    auth = AuthToken(opts['--verbose'])
+    auth.set_token()
 
-    print(json.dumps(res))
+    learn_object = LearnObject(opts)
+    if opts['--method'] == 'get':
+        learn_object.get()
+    elif opts['--method'] == 'post':
+        learn_object.create()
+    elif opts['--method'] == 'put':
+        learn_object.update()
+    elif opts['--method'] == 'delete':
+        learn_object.delete()
 
 if __name__ == '__main__':
     opts = docopt(usage, version='Bb REST API CLI v0.0.1')

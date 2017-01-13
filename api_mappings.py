@@ -89,10 +89,12 @@ def api():
     learn_object = LearnObject(opts)
     if opts['--method'] == 'get':
         learn_object.get()
+    elif opts['--method'] == 'patch':
+        learn_object.update()
     elif opts['--method'] == 'post':
         learn_object.create()
     elif opts['--method'] == 'put':
-        learn_object.update()
+        learn_object.create()
     elif opts['--method'] == 'delete':
         learn_object.delete()
 

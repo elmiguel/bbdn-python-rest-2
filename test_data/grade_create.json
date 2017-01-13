@@ -1,11 +1,10 @@
 {
-  "externalId": "string",
-  "name": "string",
-  "description": "string",
+  "externalId": "test-python-column",
+  "name": "Test Column",
+  "description": "This is a column that was created via the bbrestapi CLI.",
   "externalGrade": true,
-  "created": "2016-12-14T05:12:15.654Z",
   "score": {
-    "possible": 0,
+    "possible": 100,
     "decimalPlaces": 0
   },
   "availability": {
@@ -13,13 +12,12 @@
   },
   "grading": {
     "type": "Attempts",
-    "due": "2016-12-14T05:12:15.654Z",
+    "due": "2017-01-12T16:20:15.359Z",
     "attemptsAllowed": 0,
     "scoringModel": "Last",
     "anonymousGrading": {
       "type": "None",
-      "releaseAfter": "2016-12-14T05:12:15.654Z"
+      "releaseAfter": "2017-01-12T16:20:15.359Z"
     }
-  },
-  "contentId": "string"
+  }
 }

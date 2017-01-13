@@ -59,7 +59,7 @@ class LearnObject:
         # Action controls
         self.data = options['--data']
         # if a file is provided, override self.data
-        if options['--file']:
+        if options['--file'] != 'None':
             with open(options['--file']) as f:
                 self.data = json.dumps(json.loads(f.read()))
 
@@ -102,19 +102,16 @@ class LearnObject:
             raise TypeError
 
     def create(self):
-        '''
-        {"externalId": "test.python.user","dataSourceId": "_81_1","userName": "python_demo","password": "python61","availability": {"available": "Yes"},"name": {"given": "Python","family": "Demo"},"contact": {"email": "no.one@ereh.won"}}
-        '''
         try:
             if self.verbose:
-                print("Data from create:", type(self.data), self.data)
+                print("Data from create:", type(self.data), json.loads(self.data))
 
-            # if self.validator.validate(self.data):
-            if self.verbose:
-                print("[%s] create called" % self.class_name)
-            url = self.prep_url()
-            print(url)
-            self.do_rest(url)
+            if self.validator.validate(json.loads(self.data)):
+                if self.verbose:
+                    print("[%s] create called" % self.class_name)
+                url = self.prep_url()
+                print(url)
+                self.do_rest(url)
 
         except SchemaError as se:
             self.res = {"error": se}
@@ -122,36 +119,34 @@ class LearnObject:
         print(self.res)
 
     def update(self, obj_id=None, id_type=None, data=None, params=None):
-        # try:
-        #     data = json.loads(data)
-        #     if self.verbose:
-        #         print(data)
-        #
-        #     if self.validator.validate(data):
-        #         if self.verbose:
-        #             print("[%s] update called" % self.class_name)
-        #
-        #         params = self.params.update(params) if params else self.params
-        #
-        #         self.do_rest('PATCH', self.prep_url(obj_id, id_type),
-        #                      'update', data=data, params=params)
-        #
-        # except SchemaError as se:
-        #     self.res = {"error": se}
+        try:
 
-        print('NEEDS TO BE REFACTORED!')
-        return self.res
+            if self.verbose:
+                print("Data from update:", type(self.data), json.loads(self.data))
 
-    def delete(self, obj_id=None, id_type=None):
+            if self.validator.validate(json.loads(self.data)):
+                if self.verbose:
+                    print("[%s] update called" % self.class_name)
+                url = self.prep_url()
+                print(url)
+                self.do_rest(url)
+
+        except SchemaError as se:
+            self.res = {"error": se}
+
+        print(self.res)
+
+    def delete(self):
         if self.verbose:
             print("[%s] delete called" % self.class_name)
 
-        # self.do_rest('DELETE', self.prep_url(obj_id, id_type) +
-        #              self.prep_id(obj_id[0], id_type[0]), 'delete')
-        # self.res = {"message": "Successfully deleted", "id": obj_id[0]}
+        url = self.prep_url()
+        print(url)
+        self.do_rest(url)
 
-        print('NEEDS TO BE REFACTORED!')
-        return self.res
+        self.res = {"message": "Successfully deleted", "url": url}
+
+        print(self.res)
 
     def get(self):
         if self.verbose:
@@ -201,6 +196,10 @@ class LearnObject:
                                        or self.type[0], self.content_id)
                 else:
                     url += '/%s/children/' % self.child_course_id
+
+        elif self.api_type == 'grades':
+            # groups was pre-appended: replace with courses
+            url = url.replace('grades', 'courses')
 
         elif self.api_type == 'groups':
             # groups was pre-appended: replace with courses

@@ -133,8 +133,6 @@ TermSchema = Schema({
 })
 
 MembershipSchema = Schema({
-    "userId": str,
-    "courseId": str,
     Optional("childCourseId"): str,
     Optional("dataSourceId"): str,
     Optional("created"): And(str, Regex(date_pattern)),
@@ -177,5 +175,5 @@ GradebookColumnSchema = Schema({
             Optional("releaseAfter"): And(str, Regex(date_pattern))
         }
     },
-    "contentId": str
+    Optional("contentId"): str
 })

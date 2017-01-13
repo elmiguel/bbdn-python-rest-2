@@ -200,6 +200,31 @@ class LearnObject:
         elif self.api_type == 'grades':
             # groups was pre-appended: replace with courses
             url = url.replace('grades', 'courses')
+            url += '/%s:%s/gradebook/columns' % (self.type[0], self.course_id)
+            if self.column_id:
+                if self.column_id:
+                    url += '/%s:%s' % (self.type[1] or self.type[0], self.column_id)
+
+                    if self.attempts_id:
+                        if self.attempts_id == 'ALL':
+                            url += '/attempts'
+                        else:
+                            url += '/attempts/%s:%s' % (self.type[2] or self.type[1]
+                                                        or self.type[0], self.attempts_id)
+
+                    if self.user_id:
+                        if self.user_id == 'ALL':
+                            url += '/users'
+                        else:
+                            url += '/users/%s:%s' % (self.type[2] or self.type[1]
+                                                     or self.type[0], self.user_id)
+            else:
+                # columns was not supplied but a user was
+                if self.user_id:
+                    # remove the pre-appended columns with nothing and rebuild url
+                    url = url.replace('columns', '')
+                    url += '/users/%s:%s' % (self.type[2] or self.type[1]
+                                             or self.type[0], self.user_id)
 
         elif self.api_type == 'groups':
             # groups was pre-appended: replace with courses

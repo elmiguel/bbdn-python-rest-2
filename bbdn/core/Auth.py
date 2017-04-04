@@ -28,7 +28,7 @@ import json
 import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.poolmanager import PoolManager
-from settings_backup import config as settings
+from settings import config as settings
 from datetime import datetime, timedelta
 from time import sleep
 

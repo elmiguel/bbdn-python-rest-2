@@ -1,7 +1,7 @@
 PAGINATION = 10
 config = {
     "key": "<YOUR_KEY>",
-    "secret": "<YOUR_SECRET>",
+    "secret": "YOUR_SECRET",
     "credentials": "client_credentials",
     "cert_path": "./trusted/keytool_crt.pem",
     "target_url": "irscstaging.blackboard.com",

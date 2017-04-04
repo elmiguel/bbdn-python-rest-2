@@ -28,7 +28,7 @@ import json
 import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.poolmanager import PoolManager
-from settings import config as settings
+from settings_backup import config as settings
 from datetime import datetime, timedelta
 from time import sleep
 
@@ -39,6 +39,7 @@ requests.packages.urllib3.disable_warnings()
 
 
 class Tls1Adapter(HTTPAdapter):
+
     def __init__(self):
         self.poolmanager = None
         super().__init__()
@@ -50,10 +51,12 @@ class Tls1Adapter(HTTPAdapter):
         # PROTOCOL_SSLv23 = 2
         # PROTOCOL_SSLv3 = 1
         # PROTOCOL_TLSv1 = 3
-        self.poolmanager = PoolManager(num_pools=connections, maxsize=maxsize, block=block, ssl_version=3)
+        self.poolmanager = PoolManager(
+            num_pools=connections, maxsize=maxsize, block=block, ssl_version=3)
 
 
 class AuthToken:
+
     def __init__(self, verbose=False):
         self.verbose = verbose
 
@@ -84,8 +87,10 @@ class AuthToken:
             if self.verbose:
                 print("[auth:setToken] POST Request URL: " + oauth_url)
                 print("[auth:setToken] JSON Payload: \n%s" % json.dumps(settings['payload'],
-                                                                        indent=settings['json_options']['indent'],
-                                                                        separators=settings['json_options']['separators'],
+                                                                        indent=settings[
+                                                                            'json_options']['indent'],
+                                                                        separators=settings[
+                                                                            'json_options']['separators'],
                                                                         default=self.date_handler))
 
             r = session.post(oauth_url, data=settings['payload'],
@@ -98,7 +103,8 @@ class AuthToken:
 
             if self.verbose:
                 print("[auth:setToken()] RESPONSE: \n%s" % json.dumps(res, indent=settings['json_options']['indent'],
-                                                                      separators=settings['json_options']['separators'],
+                                                                      separators=settings[
+                                                                          'json_options']['separators'],
                                                                       default=self.date_handler))
 
             if r.status_code == 200:
@@ -113,7 +119,8 @@ class AuthToken:
             settings['payload']['expires_at'] = now + timedelta(seconds=s, minutes=m)
 
             if self.verbose:
-                print("[auth:setToken()] Token Expires at " + settings['payload']['expires_at'].strftime("%H:%M:%S"))
+                print("[auth:setToken()] Token Expires at " +
+                      settings['payload']['expires_at'].strftime("%H:%M:%S"))
                 print("[auth:setToken()] TOKEN: %s" % settings['payload']['token'])
 
             # there is the possibility the required token may expire
@@ -198,7 +205,8 @@ class AuthToken:
     def is_expired(self, expiration_datetime):
         try:
             if self.verbose:
-                print("[auth.is_expired()] Token Expires at " + expiration_datetime.strftime("%H:%M:%S"))
+                print("[auth.is_expired()] Token Expires at " +
+                      expiration_datetime.strftime("%H:%M:%S"))
 
             time_left = (expiration_datetime - datetime.now()).total_seconds()
 

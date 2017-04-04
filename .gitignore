@@ -3,4 +3,5 @@
 rest-key-secret
 ./**/__pycache__
 ./**/*.pyc
-settings-backup.py
+settings_backup.py
+json_data

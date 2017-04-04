@@ -28,7 +28,7 @@ import json
 import requests
 from bbdn.core.Auth import Tls1Adapter
 from bbdn.core.Validator import UserSchema, CourseSchema, ContentsSchema, DataSourceSchema, TermSchema, MembershipSchema, GradebookColumnSchema, SystemSchema
-from settings import config as settings
+from settings_backup import config as settings
 from schema import SchemaError
 
 validators = {
@@ -296,7 +296,7 @@ class LearnObject:
 
         if r.text:
             # if '<!doctype html>' not in r.text[:16]:
-            self.res = json.loads(r.text)
+            self.res = json.dumps(json.loads(r.text))
             print(self.res)
 
         if self.verbose:

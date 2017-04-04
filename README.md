@@ -46,8 +46,11 @@ You may also install Python tools for your IDE or use a text editor and terminal
     test_data
         course_create.json     Test data to create a course.
         course_update.json     Test data to update a course.
+        grade_create.json      Test data to create a grade.
+        membership_create.json Test data to create a a membership.
+        membership_update.json Test data to update a a membership.
         term_create.json       Test data to create a term.
-        term_update.json       Test data to uodate a term.
+        term_update.json       Test data to update a term.
         user_create.json       Test data to create a user.
         user_update.json       Test data to update a term.
 
@@ -61,8 +64,8 @@ The rest demo script demonstrates authenticating a REST application, management 
 
 <i><b>NOTE:</b> Before running the example code you must register a developer account and application as described on the Developer Community <a href="https://community.blackboard.com/docs/DOC-1579">What is the Developer Portal: Developer Registration and Application Management</a> and <a href="https://community.blackboard.com/docs/DOC-1580">Managing REST Integrations in Learn: The REST Integrations Tool for System Administrators</a> pages. You must also configure the script as outlined in the below Configure the Script section.</i>
 
-When run with only a target URL the script will in the following order
-Authenticate<br/>
+- [ ] Create a task to run through all test data
+
 Create, Read, and Update a Data Source<br/>
 Create, Read, and Update a Term<br/>
 Create, Read, and Update a Course<br/>
@@ -164,4 +167,4 @@ Once you have setup your test server and edited the settings.py to reflect your 
 
 
 ### Conclusion
-For a thorough walkthrough of this code, visit the corresponding Blackboard Developer Community <a href="#">REST Demo Using Python</a>.
+For a thorough walkthrough of this code, visit the corresponding Blackboard Developer Community <a href="https://github.com/elmiguel/bbdn-python-rest-2">REST Demo Using Python</a>.

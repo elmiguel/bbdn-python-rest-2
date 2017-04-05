@@ -2,7 +2,7 @@
 This project contains sample code for demonstrating the Blackboard Learn REST APIs in Python.
 This sample code was built with Python 3.5.0.
 
-###Project at a glance:
+### Project at a glance:
 - Target: Blackboard Learn SaaS Release 2015.11.0-ci.23+a9a4758 minimum
 - Source Release: v1.0
 - Release Date  2016-02-24
@@ -12,7 +12,7 @@ This sample code was built with Python 3.5.0.
 - Tested on Blackboard Learn SaaS Release 2015.11.0-ci.23+a9a4758
 - Tested on Blackboard Learn 9.1  Release 3100.0.0-rel.107+401e22b
 
-###Requirements:
+### Requirements:
 - Python  3.5.0
 - Python Modules: docopt and schema
 ```

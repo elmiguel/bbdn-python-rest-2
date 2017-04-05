@@ -1,4 +1,4 @@
-# BBDN-REST-Python
+# Blackbord REST API with Python
 This project contains sample code for demonstrating the Blackboard Learn REST APIs in Python.
 This sample code was built with Python 3.5.0.
 

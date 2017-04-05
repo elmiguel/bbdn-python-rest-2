@@ -88,6 +88,7 @@ Usage:
 Bb REST API CLI
 
 Usage:
+    bbrestapi announcements [ANNOUNCEMENT-ID] [options]
     bbrestapi courses [COURSE-ID CHILD-COURSE-ID] [options]
     bbrestapi contents COURSE-ID [CONTENT-ID] [options]
     bbrestapi groups COURSE-ID [CONTENT-ID GROUP-ID USER-ID] [options]
@@ -99,17 +100,19 @@ Usage:
     bbrestapi system
 
 Commands:
-    courses:     Targets courses and it's chidlren.
-    contents:    Targets contents of a course.
-    groups:      Targets grouped assignments within a course.
-    memberships: Targets users within a course.
-    grades:      Targets grades within a course.
-    users:       Targets users.
-    datasources: Targets data sources.
-    terms:       Targets terms.
-    system:      Returns the Bb Learn system information.
+    announcements: Targets announcements.
+    courses:       Targets courses and it's chidlren.
+    contents:      Targets contents of a course.
+    groups:        Targets grouped assignments within a course.
+    memberships:   Targets users within a course.
+    grades:        Targets grades within a course.
+    users:         Targets users.
+    datasources:   Targets data sources.
+    terms:         Targets terms.
+    system:        Returns the Bb Learn system information.
 
 Inputs:
+    ANNOUNCEMENT-ID The target ANNOUNCEMENT-ID. [default: None]
     COURSE-ID       The target COURSE-ID. [default: None]
     CHILD-COURSE-ID Target Child courses. ALL for all children or specific ID. [default: None]
     CONTENT-ID      Target Content with in a Course. ALL for all contents or specific ID. [default: None]

@@ -9,6 +9,16 @@ config = {
         "base": {
             "path": "/learn/api/public/v1/"
         },
+        "announcements": {
+            "path": "/learn/api/public/v1/announcements",
+            "params": {
+                "offset": 0,
+                "limit": PAGINATION,
+                "fields": "title,body,showAtLogin,showInCourses,availability,id"
+            },
+            "replace": "{courseId}"
+        },
+        },
         "courses": {
             "path": "/learn/api/public/v1/courses",
             "params": {

@@ -27,11 +27,12 @@
 import json
 import requests
 from bbdn.core.Auth import Tls1Adapter
-from bbdn.core.Validator import UserSchema, CourseSchema, ContentsSchema, DataSourceSchema, TermSchema, MembershipSchema, GradebookColumnSchema, SystemSchema
+from bbdn.core.Validator import AnnouncementSchema, UserSchema, CourseSchema, ContentsSchema, DataSourceSchema, TermSchema, MembershipSchema, GradebookColumnSchema, SystemSchema
 from settings import config as settings
 from schema import SchemaError
 
 validators = {
+    'announcements': AnnouncementSchema,
     'users': UserSchema,
     'courses': CourseSchema,
     'contents': ContentsSchema,

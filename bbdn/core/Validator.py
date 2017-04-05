@@ -12,13 +12,13 @@ AnnouncementSchema = Schema({
             Optional("end"): And(str, Regex(date_pattern))
         }
     },
-    Optional("showAtLogin": bool,
-    Optional("showInCourses": bool,
-    Optional("created": And(str, Regex(date_pattern))
+    Optional("showAtLogin"): bool,
+    Optional("showInCourses"): bool,
+    Optional("created"): And(str, Regex(date_pattern))
 })
 
 
-UserSchema=Schema({
+UserSchema = Schema({
     Optional("externalId"): str,
     Optional("dataSourceId"): str,
     Optional("userName"): str,
@@ -73,7 +73,7 @@ UserSchema=Schema({
     }
 })
 
-CourseSchema=Schema({
+CourseSchema = Schema({
     Optional("externalId"): str,
     Optional("dataSourceId"): str,
     Optional("courseId"): str,
@@ -109,7 +109,7 @@ CourseSchema=Schema({
     Optional("parentId"): str
 })
 
-ContentsSchema=Schema({
+ContentsSchema = Schema({
     Optional("title"): str,
     Optional("body"): str,
     Optional("description"): str,
@@ -127,12 +127,12 @@ ContentsSchema=Schema({
     }
 })
 
-DataSourceSchema=Schema({
+DataSourceSchema = Schema({
     Optional("externalId"): str,
     Optional("description"): str
 })
 
-TermSchema=Schema({
+TermSchema = Schema({
     Optional("externalId"): str,
     Optional("dataSourceId"): str,
     Optional("name"): str,
@@ -148,7 +148,7 @@ TermSchema=Schema({
     }
 })
 
-MembershipSchema=Schema({
+MembershipSchema = Schema({
     Optional("childCourseId"): str,
     Optional("dataSourceId"): str,
     Optional("created"): And(str, Regex(date_pattern)),
@@ -159,7 +159,7 @@ MembershipSchema=Schema({
                                                        "Guest"])
 })
 
-SystemSchema=Schema({
+SystemSchema = Schema({
     Optional("learn"): {
         Optional("major"): int,
         Optional("minor"): int,
@@ -168,7 +168,7 @@ SystemSchema=Schema({
     }
 })
 
-GradebookColumnSchema=Schema({
+GradebookColumnSchema = Schema({
     Optional("externalId"): str,
     "name": str,
     Optional("description"): str,

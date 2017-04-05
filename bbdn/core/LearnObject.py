@@ -94,6 +94,7 @@ class LearnObject:
         self.group_id = options['GROUP-ID']
         self.term_id = options['TERM-ID']
         self.user_id = options['USER-ID']
+        self.announcement_id = options['ANNOUNCEMENT-ID']
 
     @staticmethod
     def date_handler(obj):
@@ -172,6 +173,10 @@ class LearnObject:
                 # check for enrollments?
                 if self.enrollments:
                     url += '/courses'
+
+        elif self.api_type == 'announcements':
+            if self.announcement_id:
+                url += '/%s:%s' % (self.type[0], self.announcement_id)
 
         elif self.api_type == 'courses':
             if self.course_id:

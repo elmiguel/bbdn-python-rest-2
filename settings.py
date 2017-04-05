@@ -18,7 +18,6 @@ config = {
             },
             "replace": "{courseId}"
         },
-        },
         "courses": {
             "path": "/learn/api/public/v1/courses",
             "params": {

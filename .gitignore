@@ -1,6 +1,9 @@
 __pycache__
 .idea
 .DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store
 rest-key-secret
 ./**/__pycache__
 ./**/*.pyc

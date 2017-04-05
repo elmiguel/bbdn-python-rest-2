@@ -1,7 +1,7 @@
 from docopt import docopt
 import sys
 from bbdn.core.Auth import AuthToken
-from bbdn.core.LearnObject0 import LearnObject
+from bbdn.core.LearnObject import LearnObject
 import json
 
 usage = """Bb REST API CLI

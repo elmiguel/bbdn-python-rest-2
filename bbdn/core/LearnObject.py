@@ -32,33 +32,67 @@ from settings import config as settings
 from schema import SchemaError
 
 validators = {
-    'user': UserSchema,
-    'course': CourseSchema,
-    'content': ContentsSchema,
-    'datasource': DataSourceSchema,
-    'term': TermSchema,
-    'membership': MembershipSchema,
+    'users': UserSchema,
+    'courses': CourseSchema,
+    'contents': ContentsSchema,
+    'datasources': DataSourceSchema,
+    'terms': TermSchema,
+    'memberships': MembershipSchema,
     'system': SystemSchema,
-    'grade': GradebookColumnSchema
+    'grades': GradebookColumnSchema
 }
 
 
 class LearnObject:
 
-    def __init__(self, class_name, verbose=False, debug=False):
+    def __init__(self, options):
+        base_path = '/learn/api/public/v1/'
         self.auth = "Bearer %s" % settings['payload']['token']
         self.target_url = settings['target_url']
-        self.api_type = class_name.lower()
-        self.api_path = settings['api']["%ss" % self.api_type]['path']
-        self.replacement = settings['api']["%ss" % self.api_type]['replace']
-        # self.fields = settings['api']["%ss" % self.api_type]['fields']
-        self.class_name = class_name
-        self.verbose = verbose
-        self.debug = debug
+        self.api_type = [k for k, v in validators.items() if options[k]][0]
+        self.api_path = base_path + self.api_type
+        self.class_name = self.api_type.title()[:-1]
         self.validator = validators[self.api_type]
-        self.params = settings['api']["%ss" % self.api_type]['params']
         self.res = None
         self.isPaginated = False
+
+        # Action controls
+        self.data = options['--data']
+        # if a file is provided, override self.data
+        if options['--file'] != 'None':
+            with open(options['--file']) as f:
+                self.data = json.dumps(json.loads(f.read()))
+
+        self.debug = options['--debug']
+        self.enrollments = options['--enrollments']
+
+        self.help = options['--help']
+        self.method = options['--method']
+        self.page = options['--get-page']
+
+        default_params = settings['api'][self.api_type]['params']
+
+        try:
+            override_params = json.loads(options['--params'])
+            default_params.update(override_params) if options[
+                '--params'] else default_params
+            self.params = default_params.copy()
+        except ValueError:
+            self.params = default_params.copy()
+        except json.decoder.JSONDecodeError:
+            self.params = default_params.copy()
+
+        self.type = options['--type'].split(',')
+        self.verbose = options['--verbose']
+        self.attempts_id = options['ATTEMPTS-ID']
+        self.child_course_id = options['CHILD-COURSE-ID']
+        self.column_id = options['COLUMN-ID']
+        self.column_id = options['CONTENT-ID']
+        self.course_id = options['COURSE-ID']
+        self.data_source_id = options['DATA-SOURCE-ID']
+        self.group_id = options['GROUP-ID']
+        self.term_id = options['TERM-ID']
+        self.user_id = options['USER-ID']
 
     @staticmethod
     def date_handler(obj):
@@ -67,132 +101,182 @@ class LearnObject:
         else:
             raise TypeError
 
-    def create(self, data=None):
+    def create(self):
         try:
-            data = json.loads(data)
             if self.verbose:
-                print("Data from create:", type(data), data)
+                print("Data from create:", type(self.data), json.loads(self.data))
 
-            if self.validator.validate(data):
+            if self.validator.validate(json.loads(self.data)):
                 if self.verbose:
                     print("[%s] create called" % self.class_name)
-
-                self.do_rest('POST', "https://%s%s" %
-                             (self.target_url, self.api_path), 'create', data=data)
+                url = self.prep_url()
+                print(url)
+                self.do_rest(url)
 
         except SchemaError as se:
             self.res = {"error": se}
-        return self.res
+
+        print(self.res)
 
     def update(self, obj_id=None, id_type=None, data=None, params=None):
         try:
-            data = json.loads(data)
-            if self.verbose:
-                print(data)
 
-            if self.validator.validate(data):
+            if self.verbose:
+                print("Data from update:", type(self.data), json.loads(self.data))
+
+            if self.validator.validate(json.loads(self.data)):
                 if self.verbose:
                     print("[%s] update called" % self.class_name)
-
-                params = self.params.update(params) if params else self.params
-
-                self.do_rest('PATCH', self.prep_url(obj_id, id_type),
-                             'update', data=data, params=params)
+                url = self.prep_url()
+                print(url)
+                self.do_rest(url)
 
         except SchemaError as se:
             self.res = {"error": se}
 
-        return self.res
+        print(self.res)
 
-    def delete(self, obj_id=None, id_type=None):
+    def delete(self):
         if self.verbose:
             print("[%s] delete called" % self.class_name)
 
-        self.do_rest('DELETE', self.prep_url(obj_id, id_type) +
-                     self.prep_id(obj_id[0], id_type[0]), 'delete')
-        self.res = {"message": "Successfully deleted", "id": obj_id[0]}
+        url = self.prep_url()
+        print(url)
+        self.do_rest(url)
 
-        return self.res
+        self.res = {"message": "Successfully deleted", "url": url}
 
-    def get(self, obj_id=None, id_type=None, params=None, page=None, append=None):
+        print(self.res)
+
+    def get(self):
         if self.verbose:
             print("[%s:get()] called" % self.class_name)
 
-        params = self.params.update(params) if params else self.params
-
-        if page:
-            url = "https://%s%s" % (self.target_url, page)
+        if self.page:
+            url = "https://%s%s" % (self.target_url, self.page)
             self.isPaginated = True
         else:
-            url = self.prep_url(obj_id, id_type)
+            url = self.prep_url()
 
-        if append:
-            url = url + append
-        self.do_rest('GET', url, 'get', params=params)
+        self.do_rest(url)
 
-    def prep_url(self, obj_id=None, id_type=None):
-        # TODO: need to map the two arrays to assign one-to-one or one-to-many as there are some routes with 3 ids.
-        # Check to see if we are trying to update a sub-item
-        if len(obj_id) > 1:
+    def prep_url(self):
+        url = 'https://%s%s' % (self.target_url, self.api_path)
 
-            # if id_type is not more than 1 (one), default it to a list with the same id_type
-            if len(id_type) == 1:
-                id_type = [id_type[0], id_type[0]]
-                if self.verbose:
-                    print("RESET id_type", id_type)
+        # Requesting single obj?
+        if self.api_type == 'users':
+            if self.user_id:
+                url += '/%s:%s' % (self.type[0], self.user_id)
 
-            url = "https://%s%s%s" % (
-                self.target_url,
-                self.api_path.replace(self.replacement, self.prep_id(obj_id[0], id_type[0])[1:]),
-                self.prep_id(obj_id[1], id_type[1]))
+                # check for enrollments?
+                if self.enrollments:
+                    url += '/courses'
 
-            if self.verbose:
-                print("URL TEST FRO SUB-ITEMS:\n", url)
-        else:
-            # if there was no id, then there is a request to get multiple resets
-            if len(obj_id) == 0:
-                url = "https://%s%s" % (self.target_url, self.api_path)
+        elif self.api_type == 'courses':
+            if self.course_id:
+                url += '/%s:%s' % (self.type[0], self.course_id)
+
+                # child course(s)
+                if self.child_course_id:
+                    if self.child_course_id == 'ALL':
+                        url += '/children'
+                    else:
+                        url += '/children/%s:%s' % (self.type[1]
+                                                    or self.type[0], self.child_course_id)
+
+        elif self.api_type == 'contents':
+            # contents was pre-appended: replace with courses
+            url = url.replace('contents', 'courses')
+            url += '/%s:%s/contents' % (self.type[0], self.course_id)
+
+            # child content(s)
+            if self.content_id:
+                if self.content_id == 'ALL':
+                    url += '/%s:%s' % (self.type[1]
+                                       or self.type[0], self.content_id)
+                else:
+                    url += '/%s/children/' % self.child_course_id
+
+        elif self.api_type == 'grades':
+            # groups was pre-appended: replace with courses
+            url = url.replace('grades', 'courses')
+            url += '/%s:%s/gradebook/columns' % (self.type[0], self.course_id)
+            if self.column_id:
+                if self.column_id:
+                    url += '/%s:%s' % (self.type[1] or self.type[0], self.column_id)
+
+                    if self.attempts_id:
+                        if self.attempts_id == 'ALL':
+                            url += '/attempts'
+                        else:
+                            url += '/attempts/%s:%s' % (self.type[2] or self.type[1]
+                                                        or self.type[0], self.attempts_id)
+
+                    if self.user_id:
+                        if self.user_id == 'ALL':
+                            url += '/users'
+                        else:
+                            url += '/users/%s:%s' % (self.type[2] or self.type[1]
+                                                     or self.type[0], self.user_id)
             else:
-                # TODO: bad builder, need to change how these are being concatinated if
-                # there is a /{id}/ in the middle of the url
-                self.api_path = self.api_path.replace(
-                    self.replacement, self.prep_id(obj_id[0], id_type[0])[1:])
-                try:
-                    url = "https://%s%s%s" % (self.target_url, self.api_path,
-                                              self.prep_id(obj_id[1], id_type[1]))
-                except IndexError:
-                    url = "https://%s%s" % (self.target_url, self.api_path)
+                # columns was not supplied but a user was
+                if self.user_id:
+                    # remove the pre-appended columns with nothing and rebuild url
+                    url = url.replace('columns', '')
+                    url += '/users/%s:%s' % (self.type[2] or self.type[1]
+                                             or self.type[0], self.user_id)
 
-                # url = "https://%s%s" % (self.target_url, self.api_path)
+        elif self.api_type == 'groups':
+            # groups was pre-appended: replace with courses
+            url = url.replace('groups', 'courses')
+            url += '/%s:%s/contents/%s:%s/groups' % (self.type[0],
+                                                     self.type[1]
+                                                     or self.type[0])
+            if self.group_id:
+                url += '/%s:%s' % (self.type[2]
+                                   or self.type[1]
+                                   or self.type[0], self.group_id)
+
+        elif self.api_type == 'memberships':
+            # memberships was pre-appended: replace with courses
+            url = url.replace('memberships', 'courses')
+            url += '/%s:%s/users' % (self.type[0], self.course_id)
+            if self.user_id:
+                url += '/%s:%s' % (self.type[1] or self.type[0], self.user_id)
+
+        elif self.api_type == 'datasources':
+            if self.data_source_id:
+                url += '/%s:%s' % (self.type[0], self.data_source_id)
+
+        elif self.api_type == 'system':
+            url += '/version'
+
+        elif self.api_type == 'terms':
+            if self.term_id:
+                url += '/%s:%s' % (self.type[0], self.term_id)
+
         return url
 
-    def prep_id(self, obj_id=None, id_type=None):
+    def do_rest(self, url):
         if self.verbose:
-            print("prep_id called:", obj_id, id_type)
+            print(url)
 
-        _id = "/%s" % obj_id if obj_id else ''
-
-        if id_type and id_type != "primaryId":
-            _id = "/%s:%s" % (id_type, obj_id)
-        return _id
-
-    def do_rest(self, method, url, _caller, data=None, params=None):
-        data = json.dumps(data) if data else None
         session = requests.session()
         session.verify = False
 
         headers = {'Authorization': self.auth, 'Content-Type': 'application/json'}
 
         if self.isPaginated:
-            params = None
+            self.params = None
 
-        req = requests.Request(method, url, data=data, headers=headers, params=params)
+        req = requests.Request(self.method.upper(), url, data=self.data,
+                               headers=headers, params=self.params)
         prepped = session.prepare_request(req)
 
         if self.verbose:
             print("[%s:do_rest()] Called" % self.class_name)
             print(
-                "[%s:do_rest()] method=%s, url=%s, _caller=%s, data=%s" % (self.class_name, method, url, _caller, data))
+                "[%s:do_rest()] method=%s, url=%s, data=%s" % (self.class_name, self.method, url, self.data))
 
             print("Prepared Request:", prepped.url)
 
@@ -201,16 +285,19 @@ class LearnObject:
             session.mount('https://', Tls1Adapter())
 
         if self.verbose:
-            print("[%s:%s()] %s Request URL: %s" % (self.class_name, _caller, method, url))
+            print("[%s:%s()] %s Request URL: %s" %
+                  (self.class_name, self.method, self.method.upper(), url))
 
         r = session.send(prepped)
 
         if self.verbose:
-            print("[%s:%s()] STATUS CODE: %d" % (self.class_name, _caller, r.status_code))
-            print("[%s:%s()] RESPONSE:" % (self.class_name, _caller))
+            print("[%s:%s()] STATUS CODE: %d" % (self.class_name, self.method, r.status_code))
+            print("[%s:%s()] RESPONSE:" % (self.class_name, self.method))
 
         if r.text:
-            self.res = json.loads(r.text)
+            # if '<!doctype html>' not in r.text[:16]:
+            self.res = json.dumps(json.loads(r.text))
+            print(self.res)
 
         if self.verbose:
             print(json.dumps(self.res, indent=settings['json_options']['indent'],

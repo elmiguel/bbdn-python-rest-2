@@ -65,9 +65,13 @@ The rest demo script demonstrates authenticating a REST application, management 
 <i><b>NOTE:</b> Before running the example code you must register a developer account and application as described on the Developer Community <a href="https://community.blackboard.com/docs/DOC-1579">What is the Developer Portal: Developer Registration and Application Management</a> and <a href="https://community.blackboard.com/docs/DOC-1580">Managing REST Integrations in Learn: The REST Integrations Tool for System Administrators</a> pages. You must also configure the script as outlined in the below Configure the Script section.</i>
 
 
-<b>TODO:</b>
+## TODOS:
+- [ ] Implement MongoDB Connector for storage
+- [ ] Implement Stroage first approach and sync options
 - [ ] Create a task to run through all test data
 
+---
+### Automation coming soon:
 Create, Read, and Update a Data Source<br/>
 Create, Read, and Update a Term<br/>
 Create, Read, and Update a Course<br/>

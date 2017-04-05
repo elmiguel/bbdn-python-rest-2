@@ -295,7 +295,6 @@ class LearnObject:
             print("[%s:%s()] RESPONSE:" % (self.class_name, self.method))
 
         if r.text:
-            # if '<!doctype html>' not in r.text[:16]:
             self.res = json.dumps(json.loads(r.text))
             print(self.res)
 
